@@ -1,5 +1,5 @@
 <script setup>
-// No additional setup needed
+import ThemeToggle from './components/ThemeToggle.vue';
 </script>
 
 <template>
@@ -7,6 +7,7 @@
     <nav class="navbar">
       <div class="navbar-content">
         <router-link to="/" class="logo">Code Snippets</router-link>
+        <ThemeToggle />
       </div>
     </nav>
     <main class="main-content">
@@ -50,12 +51,12 @@ body {
   line-height: 1.6;
   color: var(--text-color);
   background-color: var(--background-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .app {
   min-height: 100vh;
   display: flex;
-  align-items: center;
   flex-direction: column;
 }
 
@@ -70,20 +71,22 @@ body {
   z-index: 1000;
   display: flex;
   justify-content: center;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .navbar-content {
   width: 100%;
-  /* max-width: var(--max-content-width); */
+  max-width: var(--max-content-width);
   padding: 0 2rem;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   height: 100%;
 }
 
 .container {
   width: 100%;
-  /* max-width: var(--max-content-width); */
+  max-width: var(--max-content-width);
   margin: 0 auto;
   padding: 0 2rem;
 }
@@ -91,6 +94,7 @@ body {
 .main-content {
   flex: 1;
   padding-top: calc(var(--header-height) + 2rem);
+  padding-bottom: 2rem;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -171,6 +175,8 @@ textarea {
   border-radius: 4px;
   font-size: 1rem;
   transition: border-color 0.3s ease;
+  background-color: var(--card-background);
+  color: var(--text-color);
 }
 
 input:focus,
@@ -184,5 +190,11 @@ label {
   margin-bottom: 0.5rem;
   font-weight: 500;
   color: var(--text-color);
+}
+
+/* Code highlighting theme adjustments */
+pre code.hljs {
+  background-color: var(--code-background) !important;
+  transition: background-color 0.3s ease;
 }
 </style>

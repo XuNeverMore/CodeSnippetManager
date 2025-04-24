@@ -182,7 +182,6 @@ h1 {
 
 .code-block {
   margin: 0;
-  padding: 1.5rem;
   background: var(--background-color);
   overflow-x: auto;
   font-family: 'Fira Code', monospace;

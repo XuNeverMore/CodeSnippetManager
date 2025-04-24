@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import axios from "axios";
-import { API_ENDPOINTS } from '../config/api';
+import { API_ENDPOINTS } from "../config/api";
 
 export const useSnippetStore = defineStore("snippet", {
   state: () => ({
@@ -8,7 +8,44 @@ export const useSnippetStore = defineStore("snippet", {
     currentSnippet: null,
     loading: false,
     error: null,
+    filters: {
+      languages: [],
+      tags: [],
+    },
   }),
+
+  getters: {
+    filteredSnippets: (state) => {
+      return state.snippets.filter((snippet) => {
+        const languageMatch =
+          !state.filters.languages.length ||
+          state.filters.languages.includes(snippet.language);
+        
+        // Convert comma-separated tags string to array
+        const selectedTags = state.filters.tags ? state.filters.tags.split(',').map(tag => tag.trim()) : [];
+        
+        const tagsMatch =
+          !selectedTags.length ||
+          selectedTags.some((filterTag) => {
+            return snippet.tags && snippet.tags.includes(filterTag);
+          });
+        
+        return languageMatch && tagsMatch;
+      });
+    },
+
+    availableLanguages: (state) => {
+      const languages = new Set(
+        state.snippets.map((snippet) => snippet.language)
+      );
+      return Array.from(languages).sort();
+    },
+
+    availableTags: (state) => {
+      const tags = new Set(state.snippets.flatMap((snippet) => snippet.tags));
+      return Array.from(tags).sort();
+    },
+  },
 
   actions: {
     async fetchSnippets(params = {}) {
@@ -53,7 +90,10 @@ export const useSnippetStore = defineStore("snippet", {
     async updateSnippet(id, snippet) {
       this.loading = true;
       try {
-        const response = await axios.put(`${API_ENDPOINTS.SNIPPETS}/${id}`, snippet);
+        const response = await axios.put(
+          `${API_ENDPOINTS.SNIPPETS}/${id}`,
+          snippet
+        );
         const index = this.snippets.findIndex((s) => s._id === id);
         if (index !== -1) {
           this.snippets[index] = response.data;
@@ -78,6 +118,21 @@ export const useSnippetStore = defineStore("snippet", {
       } finally {
         this.loading = false;
       }
+    },
+
+    setLanguageFilter(languages) {
+      this.filters.languages = languages;
+    },
+
+    setTagsFilter(tags) {
+      this.filters.tags = tags;
+    },
+
+    clearFilters() {
+      this.filters = {
+        languages: [],
+        tags: [],
+      };
     },
   },
 });

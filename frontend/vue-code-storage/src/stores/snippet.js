@@ -21,8 +21,12 @@ export const useSnippetStore = defineStore("snippet", {
           !state.filters.languages.length ||
           state.filters.languages.includes(snippet.language);
         
-        // Convert comma-separated tags string to array
-        const selectedTags = state.filters.tags ? state.filters.tags.split(',').map(tag => tag.trim()) : [];
+        // Handle both string and array formats for tags
+        const selectedTags = typeof state.filters.tags === 'string' 
+          ? state.filters.tags.split(',').map(tag => tag.trim())
+          : Array.isArray(state.filters.tags) 
+            ? state.filters.tags 
+            : [];
         
         const tagsMatch =
           !selectedTags.length ||

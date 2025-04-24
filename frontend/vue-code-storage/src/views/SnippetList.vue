@@ -102,6 +102,7 @@ const selectedTags = ref([])
 const isFiltersOpen = ref(false)
 let closeTimeout = null
 
+
 const filteredSnippets = computed(() => store.filteredSnippets)
 
 const activeFilterCount = computed(() => {
